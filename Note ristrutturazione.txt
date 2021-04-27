@@ -1,0 +1,9 @@
+cittadino accorpa la generalizzazioe su attributo tipo
+
+medico è relazione di base e altri con un tipo esclusivo e una relazione con cittadino con businnes rule check sanitario
+
+prenotazione accorpa app e webiste e attributi con vincoli businness rules
+
+fiala si accorpa le due generalizzazioni
+
+istanza diventa tipologia di vaccino
