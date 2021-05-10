@@ -21,17 +21,18 @@ create table Cittadino(
 create table Vaccino(
     Nome_Vaccino varchar(20) not null primary key,
     Efficacia smallint not null,
-    Eta_Max_Somministrazione smallint, --non not null in quanto un vaccino potrebbe avere anche non limitazione sull'età
-    Eta_Minima_Somministrazione smallint,
+    Eta_Max_Somministrazione smallint check (Eta_Max_Somministrazione > Eta_Minima_Somministrazione), --non not null in quanto un vaccino potrebbe avere anche non limitazione sull'età
+    Eta_Minima_Somministrazione smallint check (Eta_Minima_Somministrazione > 0),
     Intervallo_Somministrazione integer, --intervallo di ssomminitrazione in giorni se previsto
     Somministrazioni_Richieste integer not null default 1
+
 );
 
 
 create table Lotto(
     ID_Lotto varchar(10) not null primary key,
     Data_Produzione date not null,
-    Data_Scadenza date not null
+    Data_Scadenza date not null check (Data_Scadenza > Data_Produzione)
 );
 
 
@@ -61,7 +62,13 @@ create table Prenotazione(
     Origine_Prenotazione originePrenotazioneType not null,
 
     foreign key(Codice_Fiscale) references Cittadino(Codice_Fiscale),
-    primary key(Codice_Fiscale)
+    primary key(Codice_Fiscale),
+
+    constraint Prenotazione_tipo_prenotazione_constraint check( 
+        (Origine_Prenotazione = 'Web' AND Indirizzo_Mail is not null and Numero_Telefono is null) 
+        or
+        (Origine_Prenotazione = 'App' AND Indirizzo_Mail is null and Numero_Telefono is not null) 
+    )
 );
 
 create table Convocazione(
@@ -78,6 +85,8 @@ create table Convocazione(
     foreign key(Nome_Vaccino) references Vaccino(Nome_Vaccino),
 
     primary key(Codice_Fiscale, Ora, Data)
+
+  
 );
 
 create table Somministrazione(
